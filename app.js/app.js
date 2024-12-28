@@ -16,7 +16,7 @@ fetch(URL)
     .then((data) => {
         const { name, coord, main, weather } = data
         cityName.innerHTML=name;
-        degree.innerHTML = Math.floor(main.temp - 273) + " C";
+        degree.innerHTML = Math.floor(main.temp - 273) + " C*";
         wInfo.innerHTML = weather[0].description;
         coordd.innerHTML= `kordinatalar:${coord.lon}:${coord.lat}`;
         console.log(name);
