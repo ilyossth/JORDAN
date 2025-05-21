@@ -7,6 +7,21 @@ const cityName = document.querySelector(".city-name");
 const forecastContainer = document.querySelector(".forecast");
 const tomorrowBtn = document.getElementById("show-tomorrow");
 
+function translateToUzbek(desc) {
+  const dict = {
+    "clear sky": "ochiq osmon",
+    "few clouds": "biroz bulutli",
+    "scattered clouds": "tarqoq bulutlar",
+    "broken clouds": "qisman bulutli",
+    "shower rain": "yomg‘irli",
+    "rain": "yomg‘ir",
+    "thunderstorm": "momaqaldiroq",
+    "snow": "qor",
+    "mist": "tuman"
+  };
+  return dict[desc] || desc;
+}
+
 function showForecast(filterFunc) {
   fetch(URL)
     .then(res => res.json())
@@ -19,10 +34,12 @@ function showForecast(filterFunc) {
       filteredForecasts.forEach(item => {
         const time = item.dt_txt.split(" ")[1].slice(0, 5);
         const temp = Math.round(item.main.temp - 273.15);
-        const description = item.weather[0].description;
+        const description = translateToUzbek(item.weather[0].description);
+        const icon = item.weather[0].icon;
 
         forecastContainer.innerHTML += `
           <div class="forecast-item">
+            <img src="https://openweathermap.org/img/wn/${icon}.png" alt="icon">
             <p><strong>${time}</strong> - ${temp}°C, ${description}</p>
           </div>
         `;
@@ -33,12 +50,28 @@ function showForecast(filterFunc) {
     });
 }
 
-// Bugungi ob-havoni sahifa yuklanganda ko‘rsat
-const today = new Date().getDate();
-showForecast(item => new Date(item.dt_txt).getDate() === today);
+document.addEventListener("DOMContentLoaded", () => {
+  document.body.style.opacity = 1;
 
-// Tugma bosilganda ertangi ob-havoni ko‘rsat
-tomorrowBtn.addEventListener("click", () => {
-  const tomorrow = new Date().getDate() + 1;
-  showForecast(item => new Date(item.dt_txt).getDate() === tomorrow);
+  const todayStr = new Date().toDateString();
+  showForecast(item => new Date(item.dt_txt).toDateString() === todayStr);
 });
+
+tomorrowBtn.addEventListener("click", () => {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowStr = tomorrow.toDateString();
+
+  showForecast(item => new Date(item.dt_txt).toDateString() === tomorrowStr);
+});
+
+const nextBtn = document.getElementById("go-next");
+if (nextBtn) {
+  nextBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    document.body.classList.add("fade-out");
+    setTimeout(() => {
+      window.location.href = "next.html"; // O‘zgartiring
+    }, 700);
+  });
+}

@@ -7,6 +7,12 @@ body {
   margin: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #2c3e50, #3498db);
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+
+body.fade-out {
+  opacity: 0;
 }
 
 .container {
@@ -28,6 +34,7 @@ body {
   backdrop-filter: blur(4px);
   background-color: rgba(0, 0, 0, 0.4);
 }
+
 .city-name {
   font-size: 24px;
   font-weight: 600;
@@ -39,38 +46,37 @@ body {
   text-align: center;
 }
 
-.degree {
-  font-size: 36px;
-  font-weight: bold;
-  color: #ffce00;
+.forecast-item {
   background: rgba(255, 255, 255, 0.1);
-  padding: 15px 25px;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(255, 206, 0, 0.5);
-  text-align: center;
-}
-
-.weather-info {
-  font-size: 18px;
-  font-weight: 500;
-  color: #ffffff;
-  text-transform: capitalize;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 15px 25px;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
-  text-align: center;
-}
-
-.coord {
-  font-size: 14px;
-  color: #cccccc;
-  opacity: 0.85;
-  background: rgba(255, 255, 255, 0.05);
   padding: 10px 20px;
-  border-radius: 12px;
-  box-shadow: 0 5px 10px rgba(200, 200, 255, 0.2);
+  border-radius: 10px;
+  color: white;
   text-align: center;
+  font-size: 16px;
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.forecast-item img {
+  width: 40px;
+  height: 40px;
+}
+
+button {
+  background-color: #ffce00;
+  color: #000;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: #f1b800;
 }
 
 @media (max-width: 600px) {
@@ -79,14 +85,11 @@ body {
     padding: 15px;
   }
 
-  .degree {
-    font-size: 28px;
+  .city-name {
+    font-size: 20px;
   }
 
-  .weather-info,
-  .city-name,
-  .coord {
-    font-size: 16px;
-    padding: 10px 15px;
+  .forecast-item {
+    font-size: 14px;
   }
 }
