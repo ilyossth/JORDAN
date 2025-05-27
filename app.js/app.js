@@ -14,24 +14,22 @@ function translateToUzbek(desc) {
     "scattered clouds": "tarqoq bulutlar",
     "broken clouds": "qisman bulutli",
     "shower rain": "yomg‘irli",
-    "rain": "yomg‘ir",
-    "thunderstorm": "momaqaldiroq",
-    "snow": "qor",
-    "mist": "tuman"
+    rain: "yomg‘ir",
+    thunderstorm: "momaqaldiroq",
+    snow: "qor",
+    mist: "tuman",
   };
   return dict[desc] || desc;
 }
 
 function showForecast(filterFunc) {
   fetch(URL)
-    .then(res => res.json())
-    .then(data => {
+    .then((res) => res.json())
+    .then((data) => {
       cityName.innerHTML = data.city.name;
-
       const filteredForecasts = data.list.filter(filterFunc);
-
       forecastContainer.innerHTML = "";
-      filteredForecasts.forEach(item => {
+      filteredForecasts.forEach((item) => {
         const time = item.dt_txt.split(" ")[1].slice(0, 5);
         const temp = Math.round(item.main.temp - 273.15);
         const description = translateToUzbek(item.weather[0].description);
@@ -39,22 +37,23 @@ function showForecast(filterFunc) {
 
         forecastContainer.innerHTML += `
           <div class="forecast-item">
-            <img src="https://openweathermap.org/img/wn/${icon}.png" alt="icon">
+            <img src="https://openweathermap.org/img/wn/${icon}.png" alt="${description}">
             <p><strong>${time}</strong> - ${temp}°C, ${description}</p>
           </div>
         `;
       });
     })
-    .catch(err => {
-      console.error("Xatolik yuz berdi:", err);
+    .catch((err) => {
+      forecastContainer.innerHTML =
+        "<p>Xatolik yuz berdi. Ma’lumotlar olinmadi.</p>";
+      console.error(err);
     });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  document.body.style.opacity = 1;
-
+  document.body.classList.add("loaded");
   const todayStr = new Date().toDateString();
-  showForecast(item => new Date(item.dt_txt).toDateString() === todayStr);
+  showForecast((item) => new Date(item.dt_txt).toDateString() === todayStr);
 });
 
 tomorrowBtn.addEventListener("click", () => {
@@ -62,7 +61,7 @@ tomorrowBtn.addEventListener("click", () => {
   tomorrow.setDate(tomorrow.getDate() + 1);
   const tomorrowStr = tomorrow.toDateString();
 
-  showForecast(item => new Date(item.dt_txt).toDateString() === tomorrowStr);
+  showForecast((item) => new Date(item.dt_txt).toDateString() === tomorrowStr);
 });
 
 const nextBtn = document.getElementById("go-next");
@@ -71,7 +70,25 @@ if (nextBtn) {
     e.preventDefault();
     document.body.classList.add("fade-out");
     setTimeout(() => {
-      window.location.href = "next.html"; // O‘zgartiring
+      window.location.href = "next.html";
     }, 700);
   });
 }
+
+const themeBtn = document.getElementById("theme-btn");
+
+function setTheme(isDark) {
+  document.body.classList.toggle("dark", isDark);
+  themeBtn.textContent = isDark ? "☀️" : "🌙";
+  localStorage.setItem("darkMode", isDark);
+}
+
+themeBtn.addEventListener("click", () => {
+  const isDark = !document.body.classList.contains("dark");
+  setTheme(isDark);
+});
+
+window.addEventListener("DOMContentLoaded", () => {
+  const saved = localStorage.getItem("darkMode") === "true";
+  setTheme(saved);
+});
